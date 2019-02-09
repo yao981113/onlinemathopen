@@ -78,7 +78,7 @@ class Submission(models.Model):
 			help_text = "The time the submission was made")
 	
 	def __str__(self):
-		return self.team + " " + self.timestamp
+		return self.team + "'s submission at " + self.timestamp
 	
 # An attempt is the answer to a *single* problem.
 class Attempt(models.Model):
@@ -94,6 +94,27 @@ class Attempt(models.Model):
 		return self.guess == self.problem.answer
 		
 	def __str__(self):
-		return "Answer " + self.guess + " for problem " + self.problem.number
+		return self.submission.team.name + "'s answer " + self.guess + " for problem " + self.problem.number
 	
+
+# A problem status corresponds to a team's status on a certain problem.
+class ProblemStatus(models.Model):
+	team = models.ForeignKey(Team, on_delete=models.CASCADE,
+			help_text = "The team that this status is linked to")
+	problem = models.ForeignKey(Problem, on_delete=models.CASCADE,
+			help_text = "The problem that this status is linked to")
+	current_answer = models.IntegerField(
+			help_text = "The current answer")
+	guesses_left = models.IntegerField(
+			help_text = "The number of guesses left (-1 means infinite)")
+	
+	@property
+	def correct(self):
+		return self.current_answer == self.problem.answer
+	
+	@property
+	def can_guess(self):
+		return guesses_left != 0
 		
+	def __str__(self):
+		return self.team + "'s problem " + self.problem.number
