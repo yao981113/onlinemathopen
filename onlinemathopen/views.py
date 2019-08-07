@@ -14,7 +14,15 @@ def contest(request, team_id):
 	team = get_object_or_404(models.Team, pk = team_id)
 	test = team.test
 	
+	# A list of past submissions that this team made
+	past_submissions = list(models.Submission.objects.filter(team = team_id).order_by('timestamp'))
+	
+	problem_statuses = list(models.ProblemStatus.objects.filter(team = team_id).order_by('problem__number'))
+	
+	
+	
 	if request.method == "POST":
+		form = NewAttemptForm(request.POST, test = test)
 		pass
 	
 	

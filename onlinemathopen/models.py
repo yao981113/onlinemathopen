@@ -17,13 +17,8 @@ class Contest(models.Model):
 			help_text = "Start of test window")
 	exam_window_end = models.DateTimeField(
 			help_text = "End of test window")
-	live_scoring = models.BooleanField(default=False, 
-			help_text = "Does the test use live scoring?")
 	active = models.BooleanField(default=False,
 			help_text = "Is the contest currently active?")
-	# max_attempts is only looked at if live_scoring is True.
-	max_attempts = models.PositiveIntegerField(
-			help_text = "Number of available attempts on each problem on the test (ignore if live scoring is off)")
 	
 	@property
 	def window_has_past(self):
@@ -105,16 +100,15 @@ class ProblemStatus(models.Model):
 			help_text = "The problem that this status is linked to")
 	current_answer = models.IntegerField(
 			help_text = "The current answer")
-	guesses_left = models.IntegerField(
-			help_text = "The number of guesses left (-1 means infinite)")
 	
 	@property
 	def correct(self):
 		return self.current_answer == self.problem.answer
 	
-	@property
-	def can_guess(self):
-		return guesses_left != 0
-		
+	# Update the problem status based on the attempt
+	def update(self, attempt):
+		current_answer = attempt.guess
+		return True
+	
 	def __str__(self):
 		return self.team + "'s problem " + self.problem.number
