@@ -43,8 +43,6 @@ class Problem(models.Model):
 			help_text = "The problem number on the test")
 	answer = models.IntegerField(
 			help_text = "The answer to the problem")
-	weight = models.IntegerField(default = 1,
-			help_text = "The weight of the problem")
 			
 	def __str__(self):
 		return self.test.name + " problem #" + str(self.number)
@@ -54,7 +52,7 @@ class Team(models.Model):
 	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 	name = models.CharField(max_length=80, default='', 
 			help_text = "Name of team")
-	leader = models.ForeignKey(User, on_delete=models.CASCADE,
+	captain = models.ForeignKey(User, on_delete=models.CASCADE,
 			help_text = "The user that registered the team")
 	test = models.ForeignKey(Contest, on_delete=models.CASCADE,
 			help_text = "The test that the team is for")
