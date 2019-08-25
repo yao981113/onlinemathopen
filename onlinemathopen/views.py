@@ -44,7 +44,12 @@ def past_tests(request):
 def register(request, test_id):
 	test = get_object_or_404(Contest, pk = test_id)
 	user = request.user
-	if test.window_has_past:
+	team = get_team(test, user)
+	
+	if (team != None):
+		messages.warning(request, "You have already registered a team.")
+		form = None
+	elif test.window_has_past:
 		messages.warning(request, "The test has already ended.")
 		form = None
 	elif request.method == 'POST':
@@ -54,7 +59,7 @@ def register(request, test_id):
 			team.captain = user
 			team.test = test
 			team.save()
-			return redirect('/') #TODO maybe redirect to test page?
+			return redirect('') #TODO maybe redirect to test page?
 	else:
 		form = RegistrationForm()
 	return render(request, 'onlinemathopen/register.html', {'form': form})
@@ -67,23 +72,24 @@ def get_team(test, user):
 	return None
 
 @login_required
-def contest(request, test_id):
+def compete(request, test_id):
 	
 	test = get_object_or_404(Contest, pk = test_id)
+	user = request.user
 	# Find the team that the user is on
-	team = get_team(test, request.user)
+	team = get_team(test, user)
 	if (team == None):
-		raise Http404("Team not found")
-		pass #TODO make them register a team
+		messages.warning(request, "You have not registered a team yet.")
+		return redirect('register/' + test_id)
 	if test.window_not_started:
 		messages.warning(request, "The test has not started.")
-		pass #TODO
-	elif test.window_has_past:
+		return redirect('active_tests')
+	if test.window_has_past:
 		messages.warning(request, "The test has already ended.")
-		pass #TODO
-	elif not test.active:
+		return redirect('past_tests')
+	if not test.active:
 		messages.warning(request, "The test is not currently accepting submissions.")
-		pass #TODO
+		return redirect('active_tests')
 	
 	# A list of past submissions that this team made (NOT USED)
 	past_submissions = list(Submission.objects.filter(team = team).order_by('timestamp'))
@@ -100,7 +106,8 @@ def contest(request, test_id):
 			if test.accepting_submissions:
 				submission = form.save()
 			else:
-				pass #Do something about test not accepting submissions
+				messages.warning(request, "The test is not currently accepting submissions.")
+				return redirect('active_tests')
 		else: 
 			reset_form = False
 			pass #Do something about form not being valid

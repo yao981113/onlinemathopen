@@ -1,0 +1,30 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>{% block title %}Online Math Open{% endblock %}</title>
+</head>
+
+<body>
+    <div id="nav">
+        {% block nav %}
+        <ul class = "nav">
+            <li><a href="/">Home</a></li>
+            
+			{% if request.user.is_authenticated %}
+				<li><a href="/logout">Logout</a></li>
+			{% else %}
+				<li><a href="/login">Login</a></li>
+				<li><a href="/signup">Sign Up</a></li>
+			{% endif %}
+        </ul>
+        {% endblock %}
+    </div>
+
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Past Tests{% endblock %}
+
+{% block content %}
+<h1>Past tests</h1>
+
+{% for test in tests %}
+
+<hr />
+<h4>{{ test.name }}</h4>
+
+{% if test.description %}
+<p>{{ test.description }}</p>
+{% endif %}
+
+<ul>
+	<li>Test start: {{ test.exam_window_start }}</li>
+	<li>Test end: {{ test.exam_window_end }}</li>
+	<li>Number of problems: <b>{{ test.number_of_problems }} problems</b></li>
+</ul>
+
+{% endfor %}
+
+
+{% endblock %}
