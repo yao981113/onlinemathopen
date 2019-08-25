@@ -50,8 +50,7 @@ class Problem(models.Model):
 # A team is the entity where a given user submit answers for a given contest.
 class Team(models.Model):
 	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-	name = models.CharField(max_length=80, default='', 
-			help_text = "Name of team")
+	name = models.CharField(max_length=80, help_text = "Name of team")
 	captain = models.ForeignKey(User, on_delete=models.CASCADE,
 			help_text = "The user that registered the team")
 	test = models.ForeignKey(Contest, on_delete=models.CASCADE,

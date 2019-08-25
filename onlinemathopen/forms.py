@@ -35,7 +35,16 @@ class SignUpForm(UserCreationForm):
 
 	class Meta:
 		model = User
-		fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+		fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+		
+class RegistrationForm(forms.ModelForm):
+	class Meta:
+		model = Team
+		fields = ['name', 'real_names']
+		labels = {
+			'name': 'Team Name', 
+			'real_names': 'Full names of all team members (including yourself), seperated by commas'
+		}
 
 ### NOT USED BELOW ###
 
