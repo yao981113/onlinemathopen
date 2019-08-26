@@ -7,25 +7,33 @@ class SubmissionForm(forms.Form):
 	def __init__(self, *args, **kwargs):
 		problems = kwargs.pop('problems')
 		team = kwargs.pop('team')
-		super(NewSubmissionForm, self).__init__(*args, **kwargs)
+		
+		super(SubmissionForm, self).__init__(*args, **kwargs)
 		# Create a field for each problem
 		for p in problems:
-			self.fields[p] = forms.IntegerField(required = False, label = str(p.number))
+			self.fields[str(p)] = forms.IntegerField(required = False, label = str(p.number))
 		
-	def save():
+	def save(self, **kwargs):
+		problems = kwargs.pop('problems')
+		team = kwargs.pop('team')
 		data = self.cleaned_data
+		print(data)
 		sub = Submission(team = team)
-		sub.save()
+		#Save the submission first.
+		sub.save() 
 		for p in problems:
-			if data[p] != None:
-				att = Attempt(submission = sub, problem = p, guess = data[p])
+			sp = str(p)
+			print(data[sp])
+			if data[sp] != None:
+				att = Attempt(submission = sub, problem = p, guess = data[sp])
 				att.save()
 				ps_set = ProblemStatus.objects.filter(team = team).filter(problem = p)
-				if (ps_set.exists()):
-					ps = ProblemStatus(team = team, problem = p, current_answer = data[p])
+				if (not ps_set.exists()):
+					ps = ProblemStatus(team = team, problem = p, current_answer = data[sp])
 					ps.save()
 				else:
-					list(ps_set)[0].update(att)
+					ps = list(ps_set)[0]
+					ps.update(att)
 		return sub
 		
 class SignUpForm(UserCreationForm):
@@ -43,7 +51,7 @@ class RegistrationForm(forms.ModelForm):
 		fields = ['name', 'real_names']
 		labels = {
 			'name': 'Team Name', 
-			'real_names': 'Full names of all team members (including yourself), seperated by commas'
+			'real_names': 'Full names of all team members'
 		}
 
 ### NOT USED BELOW ###

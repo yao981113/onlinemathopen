@@ -9,7 +9,7 @@ from .models import *
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import *
 from django.contrib import messages
 
 # Create your views here.
@@ -59,10 +59,10 @@ def register(request, test_id):
 			team.captain = user
 			team.test = test
 			team.save()
-			return redirect('') #TODO maybe redirect to test page?
+			return redirect('active_tests') #TODO maybe redirect to test page?
 	else:
 		form = RegistrationForm()
-	return render(request, 'onlinemathopen/register.html', {'form': form})
+	return render(request, 'onlinemathopen/register.html', {'form': form, 'test': test})
 
 ### Find the team that the user is in when they compete
 def get_team(test, user):
@@ -80,7 +80,7 @@ def compete(request, test_id):
 	team = get_team(test, user)
 	if (team == None):
 		messages.warning(request, "You have not registered a team yet.")
-		return redirect('register/' + test_id)
+		return redirect('register', test_id = test_id)
 	if test.window_not_started:
 		messages.warning(request, "The test has not started.")
 		return redirect('active_tests')
@@ -100,11 +100,12 @@ def compete(request, test_id):
 	reset_form = True
 	
 	if request.method == "POST":
+		print(request.POST)
 		form = SubmissionForm(request.POST, team = team, problems = problems)
 		
 		if form.is_valid():
 			if test.accepting_submissions:
-				submission = form.save()
+				submission = form.save(team = team, problems = problems)
 			else:
 				messages.warning(request, "The test is not currently accepting submissions.")
 				return redirect('active_tests')
@@ -119,7 +120,7 @@ def compete(request, test_id):
 		form = SubmissionForm(team = team, problems = problems)
 		
 	# The list of problem statuses associated with the test
-	problem_statuses = list(ProblemStatus.objects.filter(team = team_id).order_by('problem__number'))
+	problem_statuses = list(ProblemStatus.objects.filter(team = team.id).order_by('problem__number'))
 	
 	context = {
 			'team': team,

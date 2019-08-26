@@ -59,7 +59,7 @@ class Team(models.Model):
 			help_text = "Comma separated list of the real student(s) taking the test.")
 	
 	def __str__(self):
-		return self.name + " in " + self.test
+		return self.name + " in " + str(self.test)
 
 # A submission is what students put on the form when they submit. 
 # It contains multiple attempts, one for each problem.
@@ -70,7 +70,7 @@ class Submission(models.Model):
 			help_text = "The time the submission was made")
 	
 	def __str__(self):
-		return self.team + "'s submission at " + self.timestamp
+		return self.team.name + "'s submission at " + str(self.timestamp)
 	
 # An attempt is the answer to a *single* problem.
 class Attempt(models.Model):
@@ -86,7 +86,7 @@ class Attempt(models.Model):
 		return self.guess == self.problem.answer
 		
 	def __str__(self):
-		return self.submission.team.name + "'s answer " + self.guess + " for problem " + self.problem.number
+		return self.submission.team.name + "'s answer " + str(self.guess) + " for problem " + str(self.problem.number)
 	
 
 # A problem status corresponds to a team's status on a certain problem.
@@ -108,4 +108,4 @@ class ProblemStatus(models.Model):
 		return True
 	
 	def __str__(self):
-		return self.team + "'s problem " + self.problem.number
+		return self.team.name + "'s problem " + str(self.problem.number)
