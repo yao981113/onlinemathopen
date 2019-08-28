@@ -100,7 +100,7 @@ def compete(request, test_id):
 	reset_form = True
 	
 	if request.method == "POST":
-		print(request.POST)
+		#print(request.POST)
 		form = SubmissionForm(request.POST, team = team, problems = problems)
 		
 		if form.is_valid():
@@ -129,7 +129,5 @@ def compete(request, test_id):
 			'files': None, #TODO
 			}
 	
-	#return HttpResponse("This is the page where teams submit answers.") 
 	return render(request, "onlinemathopen/compete.html", context)
-	#TODO actual rendering
 	

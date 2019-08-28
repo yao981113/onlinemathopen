@@ -7,7 +7,6 @@ class SubmissionForm(forms.Form):
 	def __init__(self, *args, **kwargs):
 		problems = kwargs.pop('problems')
 		team = kwargs.pop('team')
-		
 		super(SubmissionForm, self).__init__(*args, **kwargs)
 		# Create a field for each problem
 		for p in problems:
@@ -17,13 +16,13 @@ class SubmissionForm(forms.Form):
 		problems = kwargs.pop('problems')
 		team = kwargs.pop('team')
 		data = self.cleaned_data
-		print(data)
+		#print(data)
 		sub = Submission(team = team)
 		#Save the submission first.
 		sub.save() 
 		for p in problems:
 			sp = str(p)
-			print(data[sp])
+			#print(data[sp])
 			if data[sp] != None:
 				att = Attempt(submission = sub, problem = p, guess = data[sp])
 				att.save()

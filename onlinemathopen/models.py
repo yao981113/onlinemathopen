@@ -58,6 +58,15 @@ class Team(models.Model):
 	real_names = models.CharField(max_length=320,
 			help_text = "Comma separated list of the real student(s) taking the test.")
 	
+	@property
+	def score(self):
+		s = 0
+		problem_statuses = list(ProblemStatus.objects.filter(team = team.id).order_by('problem__number'))
+		for ps in problem_statuses:
+			if ps.correct:
+				s += 1
+		return s
+	
 	def __str__(self):
 		return self.name + " in " + str(self.test)
 
@@ -80,13 +89,9 @@ class Attempt(models.Model):
 			help_text = "The problem that is being attempted")
 	guess = models.IntegerField(
 			help_text = "The submitted answer")
-	
-	@property
-	def correct(self):
-		return self.guess == self.problem.answer
 		
 	def __str__(self):
-		return self.submission.team.name + "'s answer " + str(self.guess) + " for problem " + str(self.problem.number)
+		return self.submission.team.name + "'s answer " + str(self.guess) + " for " + str(self.problem)
 	
 
 # A problem status corresponds to a team's status on a certain problem.
@@ -104,7 +109,8 @@ class ProblemStatus(models.Model):
 	
 	# Update the problem status based on the attempt
 	def update(self, attempt):
-		current_answer = attempt.guess
+		self.current_answer = attempt.guess
+		self.save()
 		return True
 	
 	def __str__(self):
