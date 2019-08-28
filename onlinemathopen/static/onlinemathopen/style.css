@@ -1,0 +1,46 @@
+body {
+    font-family: "Helvetica","Arial","Liberation Sans","DejaVu Sans",sans-serif;
+    font-size: 100%
+}
+
+.nav li {
+    display: inline;
+    font-weight: bold;
+	margin-right: 30px;
+}
+
+img.resize {
+  max-width:50%;
+  max-height:50%;
+}
+
+table {
+    border-collapse: collapse;
+    background-color: #EEE
+}
+
+table,th,td {
+    border: 1px solid #AAA
+}
+
+td,th {
+    text-align: center;
+    padding: 3px
+}
+
+th {
+    background-color: #122b4a;
+    color: #f7fafd
+}
+
+tr {
+    background-color: #e8e8e8
+}
+
+form {
+    margin: 0.7em 0
+}
+
+form.inline_form {
+    margin: 0 0
+}

@@ -5,6 +5,7 @@ from .models import *
 
 class SubmissionForm(forms.Form):
 	def __init__(self, *args, **kwargs):
+		kwargs.setdefault('label_suffix', '')
 		problems = kwargs.pop('problems')
 		team = kwargs.pop('team')
 		super(SubmissionForm, self).__init__(*args, **kwargs)

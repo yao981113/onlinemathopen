@@ -1,16 +1,21 @@
 {% load static %}
 
-<!DOCTYPE html>
+<link rel="stylesheet" type="text/css" href="{% static 'onlinemathopen/style.css' %}">
+
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="style.css">
     <title>{% block title %}Online Math Open{% endblock %}</title>
 </head>
 
 <body>
+
+	<div id="banner">
+		<a href="/"><img src="{% static 'onlinemathopen/OMO_logo.png' %}" height="200px"/></a>
+	</div>
+	
     <div id="nav">
         {% block nav %}
-        <ul class = "nav">
+        <ul class="nav">
             <li><a href="/">Home</a></li>
             
 			<li><a href="/active_tests">Current tests</a></li>
@@ -39,5 +44,9 @@
 		
         {% block content %}{% endblock %}
     </div>
+	
+	<div id="footer">
+	<p><small>Online Math Open, est. 2012</small></p>
+	</div>
 </body>
 </html>

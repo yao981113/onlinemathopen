@@ -37,7 +37,7 @@ def active_tests(request):
 	return render(request, 'onlinemathopen/active_tests.html', {'tests': tests})
 	
 def past_tests(request):
-	tests = Contest.objects.filter(active = False).order_by('exam_window_start')
+	tests = Contest.objects.filter(active = False).filter(window_has_past = True).order_by('exam_window_start')
 	return render(request, 'onlinemathopen/past_tests.html', {'tests': tests})
 
 @login_required
@@ -49,9 +49,11 @@ def register(request, test_id):
 	if (team != None):
 		messages.warning(request, "You have already registered a team.")
 		form = None
+		return redirect('compete', test_id = test_id)
 	elif test.window_has_past:
 		messages.warning(request, "The test has already ended.")
 		form = None
+		return redirect('past_tests')
 	elif request.method == 'POST':
 		form = RegistrationForm(request.POST)
 		if form.is_valid():
