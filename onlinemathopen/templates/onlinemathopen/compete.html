@@ -6,11 +6,11 @@
 <h1>{{ test.name }}: {{ team.name }}</h1>
 
 <h4>Downloads</h4>
-<ol>
+<ul>
 {% for file in files %}
 <li><a href="{{ file.pdf_file.url }}" target="_blank">{{ file.name }}</a></li>
 {% endfor %}
-</ol>
+</ul>
 
 <form method="post">
     {% csrf_token %}
