@@ -3,6 +3,8 @@ from django.contrib import admin, auth
 from .models import *
 # Register your models here.
 
+class FileInline(admin.TabularInline):
+	model = File
 
 class ProblemInline(admin.TabularInline):
 	model = Problem
@@ -21,7 +23,7 @@ class AttemptInline(admin.TabularInline):
 
 @admin.register(Contest)
 class ContestAdmin(admin.ModelAdmin):
-	inlines = [ProblemInline, TeamInline]
+	inlines = [FileInline, ProblemInline, TeamInline]
 	list_filter = ['active']
 	
 @admin.register(Problem)

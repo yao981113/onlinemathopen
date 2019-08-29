@@ -128,7 +128,7 @@ def compete(request, test_id):
 			'team': team,
 			'test': test,
 			'form': form,
-			'files': None, #TODO
+			'files': File.objects.filter(test = test)
 			}
 	
 	return render(request, "onlinemathopen/compete.html", context)

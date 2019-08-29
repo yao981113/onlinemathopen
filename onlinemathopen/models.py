@@ -1,4 +1,7 @@
+import string
 import uuid
+import random
+import os
 
 from django.db import models
 from django.utils import timezone
@@ -32,6 +35,22 @@ class Contest(models.Model):
 				and (not self.window_not_started) \
 				and self.active
 	
+	def __str__(self):
+		return self.name
+
+def getFilePath(instance, filename):
+	dir_name = ''.join([random.choice(string.ascii_letters+string.digits) for i in range(16)])
+	return os.path.join(dir_name, filename)
+
+class File(models.Model):
+	name = models.CharField(max_length=80,
+			help_text = "Name of the file")
+	pdf_file = models.FileField(null=True, blank=True,
+			upload_to = getFilePath,
+			help_text = "The PDF file")
+	test = models.ForeignKey(Contest, on_delete=models.CASCADE,
+			help_text = "The test associated to the file")
+			
 	def __str__(self):
 		return self.name
 
