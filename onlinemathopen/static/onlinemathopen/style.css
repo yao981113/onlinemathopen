@@ -16,16 +16,17 @@ img.resize {
 
 table {
     border-collapse: collapse;
-    background-color: #EEE
+	background: none;
+	background-color: transparent;
 }
 
 table,th,td {
     border: 1px solid #AAA
 }
 
-td,th {
+th,td {
     text-align: center;
-    padding: 3px
+    padding: 5px;
 }
 
 th {
@@ -33,8 +34,8 @@ th {
     color: #f7fafd
 }
 
-tr {
-    background-color: #e8e8e8
+td {
+    background-color: #e8e8e8;
 }
 
 form {

@@ -1,7 +1,13 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from .models import *
+
+def AnswerValidator(value):
+	if value != None:
+		if value >= 2**31 or value < 0:
+			raise ValidationError("The answer must be an integer between 0 and 2^31-1 inclusive.")
 
 class SubmissionForm(forms.Form):
 	def __init__(self, *args, **kwargs):
@@ -11,7 +17,7 @@ class SubmissionForm(forms.Form):
 		super(SubmissionForm, self).__init__(*args, **kwargs)
 		# Create a field for each problem
 		for p in problems:
-			self.fields[str(p)] = forms.IntegerField(required = False, label = str(p.number))
+			self.fields[str(p)] = forms.IntegerField(required = False, validators = [AnswerValidator], label = str(p.number))
 		
 	def save(self, **kwargs):
 		problems = kwargs.pop('problems')

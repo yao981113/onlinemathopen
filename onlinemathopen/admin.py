@@ -26,10 +26,6 @@ class ContestAdmin(admin.ModelAdmin):
 	inlines = [FileInline, ProblemInline, TeamInline]
 	list_filter = ['active']
 	
-@admin.register(Problem)
-class ProblemAdmin(admin.ModelAdmin):
-	list_filter = ['test']
-	
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
 	inlines = [SubmissionInline, ProblemStatusInline]
@@ -39,9 +35,5 @@ class TeamAdmin(admin.ModelAdmin):
 class SubmissionAdmin(admin.ModelAdmin):
 	inlines = [AttemptInline]
 	list_filter = ['team']
-
-@admin.register(ProblemStatus)
-class ProblemStatusAdmin(admin.ModelAdmin):
-	list_filter = ['team', 'problem']
 
 

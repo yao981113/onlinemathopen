@@ -37,8 +37,12 @@ def active_tests(request):
 	return render(request, 'onlinemathopen/active_tests.html', {'tests': tests})
 	
 def past_tests(request):
-	tests = Contest.objects.filter(active = False).filter(window_has_past = True).order_by('exam_window_start')
-	return render(request, 'onlinemathopen/past_tests.html', {'tests': tests})
+	tests = Contest.objects.filter(active = False).order_by('exam_window_start')
+	tests = [test for test in tests if test.window_has_past]
+	files = {}
+	for test in tests:
+		files[test] = File.objects.filter(test = test)
+	return render(request, 'onlinemathopen/past_tests.html', {'tests': tests, 'files': files})
 
 @login_required
 def register(request, test_id):
@@ -71,6 +75,13 @@ def get_team(test, user):
 	team_set = Team.objects.filter(captain = user).filter(test = test)
 	if (team_set.exists()):
 		return list(team_set)[0]
+	return None
+
+### Find the current answer (if any) of a team to a problem
+def get_status(team, problem):
+	ps_set = ProblemStatus.objects.filter(team = team).filter(problem = problem)
+	if (ps_set.exists()):
+		return list(ps_set)[0]
 	return None
 
 @login_required
@@ -121,14 +132,22 @@ def compete(request, test_id):
 	if reset_form:
 		form = SubmissionForm(team = team, problems = problems)
 		
-	# The list of problem statuses associated with the test
-	problem_statuses = list(ProblemStatus.objects.filter(team = team.id).order_by('problem__number'))
+	# Building a dictionary problem statuses associated with the team
+	statuses = {}
+	for p in problems:
+		num = str(p.number)
+		status = get_status(team, p)
+		if (status == None):
+			statuses[num] = ''
+		else:
+			statuses[num] = status.current_answer
 	
 	context = {
 			'team': team,
 			'test': test,
 			'form': form,
-			'files': File.objects.filter(test = test)
+			'files': File.objects.filter(test = test),
+			'statuses': statuses
 			}
 	
 	return render(request, "onlinemathopen/compete.html", context)

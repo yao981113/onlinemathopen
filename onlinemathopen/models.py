@@ -7,7 +7,13 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 
+from django.template.defaulttags import register
+
 # Create your models here.
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
 
 class Contest(models.Model):
 	name = models.CharField(max_length=80, default='', 

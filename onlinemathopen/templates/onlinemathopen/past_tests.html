@@ -20,11 +20,13 @@
 	<li>Number of problems: <b>{{ test.number_of_problems }} problems</b></li>
 </ul>
 
+<h4>Downloads</h4>
 <ul>
-{% for file in files %}
+{% for file in files|get_item:test %}
 	<li><a href="{{ file.pdf_file.url }}" target="_blank">{{ file.name }}</a></li>
 {% endfor %}
 </ul>
+
 
 {% endfor %}
 
