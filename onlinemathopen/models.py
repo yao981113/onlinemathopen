@@ -68,7 +68,19 @@ class Problem(models.Model):
 			help_text = "The problem number on the test")
 	answer = models.IntegerField(
 			help_text = "The answer to the problem")
-			
+	
+	@property
+	def num_solves(self):
+		s = 0
+		for ps in self.problemstatus_set.all():
+			if ps.correct:
+				s += 1
+		return s
+	
+	@property
+	def num_attempts(self):
+		return self.problemstatus_set.all().count()
+	
 	def __str__(self):
 		return self.test.name + " problem #" + str(self.number)
 
@@ -86,8 +98,7 @@ class Team(models.Model):
 	@property
 	def score(self):
 		s = 0
-		problem_statuses = list(ProblemStatus.objects.filter(team = team.id).order_by('problem__number'))
-		for ps in problem_statuses:
+		for ps in self.problemstatus_set.all():
 			if ps.correct:
 				s += 1
 		return s
