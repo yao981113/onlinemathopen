@@ -34,7 +34,7 @@ def signup(request):
 
 def active_tests(request):
   tests = Contest.objects.filter(active = True).order_by('exam_window_start')
-  tests = [test for test in tests if test.window_has_past]
+  tests = [test for test in tests if not test.window_has_past]
   return render(request, 'onlinemathopen/active_tests.html', {'tests': tests})
   
 def past_tests(request):
